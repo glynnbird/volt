@@ -1,0 +1,16 @@
+{
+  "manifest_version": 2,
+  "name": "Volt",
+  "description": "A simple password vault",
+  "version": "1.0",
+  "browser_action": {
+    "default_icon": "volt.png",
+    "default_popup": "popup.html",
+    "default_title": "Volt"
+  },
+  "permissions": [
+    "activeTab",
+    "https://ajax.googleapis.com/"
+  ],
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+}
