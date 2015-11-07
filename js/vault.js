@@ -13,9 +13,10 @@ var vaultWrite = function(doc, encryptionKey, callback) {
   doc.password = encrypt(doc.password, encryptionKey);
   if (doc._id) {
     vaultdb.get(doc, function(err, data) {
-      if (err) return callback(err, null);
-      doc._rev = data._rev;
-      vaultdb.put(doc._id, doc._rev, doc, callback);
+      if (!err) {
+        doc._rev = data._rev;
+      }
+      vaultdb.put(doc, callback);
     });
   } else {
     vaultdb.post(doc, callback);
@@ -46,6 +47,13 @@ var vaultFilter = function(domain, encryptionKey, callback) {
     } 
     callback(err, retval);
   });
+};
+
+var vaultSize = function(callback) {
+  vaultdb.info(function(err, data) {
+    console.log("vaultsize", err, data);
+    callback(err, data.doc_count);
+  })
 };
 
 /*

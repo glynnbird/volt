@@ -26,13 +26,13 @@
      -->
   </head>
   <body>
-    <div class="navbar navbar-default nav-links navbar-fixed-top">
+    <div id="topnav" class="navbar navbar-default nav-links navbar-fixed-top">
       <div class="container">
-          <span class="mini-navbar navbar-brand">Volt</span>
+          <span class="mini-navbar navbar-brand">Volt <span id="vaultsizebadge" class="badge"></span></span>
           <ul class="nav navbar-nav">
-              <li><a id="addbutton" href="#"><span style="font-size:16px" class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
-              <li><a id="cloudbutton" href="#"><span style="font-size:16px" class="glyphicon glyphicon-cloud" aria-hidden="true"></span></a></li>
-              <li><a href="#">Logout</a></li>
+              <li><a id="addbutton" href="#" style="outline: none"><span style="font-size:16px" class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
+              <li><a id="cloudbutton" href="#" style="outline: none"><span style="font-size:16px" class="glyphicon glyphicon-cloud" aria-hidden="true"></span></a></li>
+              <li><a id="logoutbutton" href="#" style="outline: none">Logout</a></li>
           </ul>
       </div>
     </div>
@@ -42,22 +42,24 @@
     </div>
     
     <div id="addformpanel" class="hidden">
-      <h3>Add</h3>
-      <form id="addform">
-        <div class="form-group">
-          <label for="url">URL</label>
-          <input type="url" class="form-control" id="url" placeholder="URL">
-        </div>
-        <div class="form-group">
-          <label for="username">Password</label>
-          <input type="text" class="form-control" id="username" placeholder="Username">
-        </div>
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input type="password" class="form-control" id="password" placeholder="Password">
-        </div>
-        <button type="submit" class="btn btn-default">Submit</button>
-      </form>
+      <div class="container">
+        <h3>Add</h3>
+        <form id="addform">
+          <div class="form-group">
+            <label for="url">URL</label>
+            <input type="url" class="form-control" id="url" placeholder="URL">
+          </div>
+          <div class="form-group">
+            <label for="username">Password</label>
+            <input type="text" class="form-control" id="username" placeholder="Username">
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="password" placeholder="Password">
+          </div>
+          <button type="submit" class="btn btn-default">Submit</button>
+        </form>
+      </div>
     </div>
     
     <div id="cloudpanel" class="hidden">
@@ -72,10 +74,26 @@
         </div>
         <div class="form-group">
           <label for="cloudurl">Cloudant URL</label>
-          <input type="url" class="form-control" id="cloudurl" placeholder="URL">
+          <input type="url" class="form-control" id="cloudurl" placeholder="Cloudant URL">
         </div>
         <button type="submit" class="btn btn-default">Save</button>
       </form>
+    </div>
+    
+    <div id="loginpanel" class="hidden">
+      <div class="container">
+        <h3>Login</h3>
+        <form id="loginform">
+          <div class="alert alert-warning">
+            Please provide the password that will encrypt your password vault.
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" class="form-control" id="loginpassword" placeholder="">
+          </div>
+          <button type="submit" class="btn btn-default">Login</button>
+        </form>
+      </div>
     </div>
     
     
