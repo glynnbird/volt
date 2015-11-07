@@ -30,13 +30,34 @@
       <div class="container">
           <span class="mini-navbar navbar-brand">Volt</span>
           <ul class="nav navbar-nav">
-              <li><a href="#" ><span style="font-size:16px" class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
+              <li><a id="addbutton" href="#"><span style="font-size:16px" class="glyphicon glyphicon-plus" aria-hidden="true"></span></a></li>
               <li><a href="#">Logout</a></li>
           </ul>
       </div>
     </div>
     
-    <div id="status"></div>
+    <div id="status">
+      
+    </div>
+    
+    <div id="addformpanel" class="hidden">
+      <h3>Add</h3>
+      <form id="addform">
+        <div class="form-group">
+          <label for="url">URL</label>
+          <input type="url" class="form-control" id="url" placeholder="URL">
+        </div>
+        <div class="form-group">
+          <label for="username">Password</label>
+          <input type="text" class="form-control" id="username" placeholder="Username">
+        </div>
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input type="password" class="form-control" id="password" placeholder="Password">
+        </div>
+        <button type="submit" class="btn btn-default">Submit</button>
+      </form>
+    </div>
   </body>
 </html>
 
