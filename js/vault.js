@@ -31,7 +31,7 @@ var vaultRead = function(id, encryptionKey, callback) {
   });
 };
 
-var vaultFilter = function(domain, callback) {
+var vaultFilter = function(domain, encryptionKey, callback) {
   var fun = function(doc) {
     emit(doc.domain,null);
   };
@@ -39,6 +39,8 @@ var vaultFilter = function(domain, callback) {
     var retval = [];
     if (!err && data && data.rows) {
       for(var i in data.rows) {
+        data.rows[i].doc.username = decrypt(data.rows[i].doc.username, encryptionKey);
+        data.rows[i].doc.password = decrypt(data.rows[i].doc.password, encryptionKey);
         retval.push(data.rows[i].doc)
       }
     } 
@@ -46,16 +48,21 @@ var vaultFilter = function(domain, callback) {
   });
 };
 
-/*vaultdb.destroy();*/
+/*
+vaultdb.destroy(function(err, data) {
+  vaultWrite({ username: "glynn.bird@gmail.com", password: "poolshifter", url: "http://twitter.com", domain: "twitter.com"},
+    key, function(err, data) {
+      vaultRead(data.id, key, function(err, doc) {
+        console.log("unencrypted",err, doc);
+      })
+    });
+  
+});
+*/
 
 
 /*var key = "monkey";
-vaultWrite({ username: "glynn.bird@gmail.com", password: "poolshifter", url: "http://twitter.com", domain: "twitter.com"},
-  key, function(err, data) {
-    vaultRead(data.id, key, function(err, doc) {
-      console.log("unencrypted",err, doc);
-    })
-  });*/
+
 
 /*vaultFilter("amazon.com", function(err, data) {
   console.log(err, data);
