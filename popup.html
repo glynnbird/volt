@@ -14,6 +14,7 @@
     <script src="js/underscore-min.js"></script>
     <script src="js/session.js"></script>
     <script src="js/aes.js"></script>
+    <script src="js/sha256.js"></script>
     <script src="js/vault.js"></script>
     <script src="js/utils.js"></script>
     <script src="js/templates.js"></script>
@@ -84,9 +85,7 @@
       <div class="container">
         <h3>Login</h3>
         <form id="loginform">
-          <div class="alert alert-warning">
-            Please provide the password that will encrypt your password vault.
-          </div>
+          <div id="loginalert" class="alert"></div>
           <div class="form-group">
             <label for="password">Password</label>
             <input type="password" class="form-control" id="loginpassword" placeholder="">

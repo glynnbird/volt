@@ -7,10 +7,10 @@ var showMainPage = function() {
   $('#status').html("");
   $('#status').removeClass("hidden");
   $('#topnav').removeClass("hidden");
+
   
   vaultSize(function(err, size) {
-    console.log(err, size);
-    $('#vaultsizebadge').html(size);
+    $('#vaultsizebadge').html(size - 1);
   })
   
   // calculate the current tab in view
@@ -20,21 +20,26 @@ var showMainPage = function() {
     // extract the domain name from the url
     var domain = extractDomainName(url);
   
-    // find all vault entries that match this domain name
-    vaultFilter(domain, "monkey",  function(err, data) {
+    loadSession(function(err, session) {
       
-      // render as a table of passwords
-      var html = '<table class="table">';
-      html += '<tr><th>Site</th><th>Username</th><th>Password</th></tr>\n';
-      for(var i in data) {
-        html += matchRow(data[i]);
-      }
-      html += "</table>";
-      $('#status').html(html);
+      // find all vault entries that match this domain name
+      vaultFilter(domain, session.hash,  function(err, data) {
       
-      // enable clipboard integration
-      new Clipboard('.clippy');
+        // render as a table of passwords
+        var html = '<table class="table">';
+        html += '<tr><th>Site</th><th>Username</th><th>Password</th></tr>\n';
+        for(var i in data) {
+          html += matchRow(data[i]);
+        }
+        html += "</table>";
+        $('#status').html(html);
+      
+        // enable clipboard integration
+        new Clipboard('.clippy');
+      });
+      
     });
+
   
   });
 };
@@ -47,8 +52,12 @@ var showLoginPanel = function() {
   $('#topnav').addClass("hidden");
   
   // clear the form
-  $('#name').val("");
-  $('#password').val("");
+  $('#loginpassword').val("");
+  
+  $('#loginalert').html("Please provide the password that will be used to encrypt and decrypt your password vault.");
+  $('#loginalert').removeClass("alert-danger");
+  $('#loginalert').addClass("alert-info");
+  
 };
 
 
@@ -121,11 +130,14 @@ $( document ).ready(function() {
     doc.domain = extractDomainName(doc.url);
     
     // write it
-    vaultWrite(doc,'monkey', function(err,data) {
+    loadSession(function(err, session) {
+      vaultWrite(doc, session.hash, function(err,data) {
       
-      // re-render the main page
-      showMainPage();
-    });
+        // re-render the main page
+        showMainPage();
+      });
+    })
+
   });
   
   // when the cloud form submit button is pressed
@@ -143,7 +155,6 @@ $( document ).ready(function() {
   $('#loginform').bind("submit", function(event) {
     event.preventDefault();
     
-    var name = $('#loginname').val();
     var password = $('#loginpassword').val();
     
     vaultSize(function(err, vaultsize) {
@@ -153,30 +164,29 @@ $( document ).ready(function() {
       if (vaultsize > 0) {
         
         // read back the verification document to see if we can decrypt it correctly
-        vaultRead("verify", password, function(err, data) {
-          console.log("verifydoc",err, data);
+        var hash = hashPassword(password);
+        vaultRead("verify", hash, function(err, data) {
           if (!err && data && data.password && data.password == "volt") {
-            saveSession({ name: name, password: password}, function(err, data) {
+            saveSession({ hash: hash}, function(err, data) {
               showMainPage();
             });
+          } else {
+            $('#loginalert').addClass("alert-danger");
+            $('#loginalert').html("Incorrect password");
           }
         })
       } else {
         // create an entry in the vault encrypted with this password
-        vaultWrite({_id: "verify", domain:"test.com", url:"http://test.com", password:"volt"}, password, function(err, data) {
-          saveSession({ name: name, password: password}, function(err, data) {
+        var hash = hashPassword(password);
+        vaultWrite({_id: "verify", domain:"test.com", url:"http://test.com", password:"volt"}, hash, function(err, data) {
+          saveSession({ hash: hash}, function(err, data) {
             showMainPage();
           });
         });
         
         
       }
-      
-      console.log(err, vaultsize);
     })
-    
-
-    console.log(name,password);
   });
   
 });

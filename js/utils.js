@@ -12,3 +12,8 @@ var getCurrentTabUrl = function(callback) {
     callback(null, tab.url);
   });
 };
+
+var hashPassword = function(password) {
+  var salt = "8db685bf71c15f37c71cc792d02e0e75";
+  return CryptoJS.SHA256(salt+password).toString()
+}
