@@ -34,3 +34,8 @@ Volt doesn't try to do everything the LastPass or 1Password do, just the basics.
 ```
 
 The `username` and `password` fields are encryped using AES using a hash of your Volt password. 
+
+## Installation
+
+This ultility isn't packaged for installatio yet, but you can install it by cloning this repository to your machine and then following the ['Load the extension'](https://developer.chrome.com/extensions/getstarted) instructions.
+
