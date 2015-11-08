@@ -16,7 +16,7 @@ This could be achieved with a web app but it would be better if the password dat
 
 ## Password Vault - Volt
 
-So [Volt][#] is a simple Chrome extension that displays a button on your Chrome browser's toolbar. When you click the button it detects which site you are looking at an retrieves any credentials you have stored against that site's domain name and displays them with "copy to clipboard" buttons. 
+So [Volt](#) is a simple Chrome extension that displays a button on your Chrome browser's toolbar. When you click the button it detects which site you are looking at an retrieves any credentials you have stored against that site's domain name and displays them with "copy to clipboard" buttons. 
 
 ![screenshot](https://github.com/glynnbird/volt/raw/master/img/volt.png "Volt screen shot")
 
