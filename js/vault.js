@@ -34,7 +34,9 @@ var vaultRead = function(id, encryptionKey, callback) {
 
 var vaultFilter = function(domain, encryptionKey, callback) {
   var fun = function(doc) {
-    emit(doc.domain,null);
+    if (!doc.deleted) {
+      emit(doc.domain, null);
+    }
   };
   vaultdb.query(fun, { key:domain, include_docs: true }, function(err, data) {
     var retval = [];
@@ -50,12 +52,30 @@ var vaultFilter = function(domain, encryptionKey, callback) {
 };
 
 var vaultSize = function(callback) {
-  vaultdb.info(function(err, data) {
-    console.log("vaultsize", err, data);
-    callback(err, data.doc_count);
-  })
+  
+  var fun = function(doc) {
+    if (typeof doc.deleted == "undefined" && doc._id != 'verify') {
+      emit(null, 1);
+    }
+  };
+  vaultdb.query({map:fun, reduce: "_count"}, {  }, function(err, data) {
+    if (!err && data && data.rows && data.rows.length == 1) {
+      console.log("count", data.rows[0].value);
+      callback(null, data.rows[0].value);
+    } else {
+      callback(null, 0)
+    }
+  });
 };
 
+var vaultRemove = function(id, rev, callback) {
+  vaultdb.get(id, function(err, doc) {
+    if (err) return callback(err, null);
+    // just mark it as deleted, don't actually delete it
+    doc.deleted=true;
+    vaultdb.put(doc,callback);
+  });
+};
 /*
 vaultdb.destroy(function(err, data) {
   vaultWrite({ username: "glynn.bird@gmail.com", password: "poolshifter", url: "http://twitter.com", domain: "twitter.com"},

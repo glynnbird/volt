@@ -4,40 +4,69 @@ var showMainPage = function() {
   $('#addformpanel').addClass("hidden");
   $('#loginpanel').addClass("hidden");
   $('#cloudpanel').addClass("hidden");
-  $('#status').html("");
   $('#status').removeClass("hidden");
   $('#topnav').removeClass("hidden");
 
   
   vaultSize(function(err, size) {
-    $('#vaultsizebadge').html(size - 1);
-  })
-  
-  // calculate the current tab in view
-  getCurrentTabUrl(function(err, url) {
-    if(err || !url) return;
     
-    // extract the domain name from the url
-    var domain = extractDomainName(url);
+    // display vault size
+    $('#vaultsizebadge').html(size);
+
   
-    loadSession(function(err, session) {
+    // calculate the current tab in view
+    getCurrentTabUrl(function(err, url) {
+      if(err || !url) return;
+    
+      // extract the domain name from the url
+      var domain = extractDomainName(url);
+  
+      loadSession(function(err, session) {
       
-      // find all vault entries that match this domain name
-      vaultFilter(domain, session.hash,  function(err, data) {
+        // find all vault entries that match this domain name
+        vaultFilter(domain, session.hash,  function(err, data) {
+        
+          if (err || !data || data.length == 0) {
+          
+            if (size == 0) {
+              var html = emptyVaultTemplate({ domain: domain});
+            } else {
+              var html = noMatchesTemplate({ domain: domain});
+            }          
+          
+          } else {
+        
       
-        // render as a table of passwords
-        var html = '<table class="table">';
-        html += '<tr><th>Site</th><th>Username</th><th>Password</th></tr>\n';
-        for(var i in data) {
-          html += matchRow(data[i]);
-        }
-        html += "</table>";
-        $('#status').html(html);
+            // render as a table of passwords
+            var html = '<table class="table">';
+            html += '<tr><th>Site</th><th>Username</th><th>Password</th></tr>\n';
+            for(var i in data) {
+              html += matchRowTemplate(data[i]);
+            }
+            html += "</table>";
+
       
-        // enable clipboard integration
-        new Clipboard('.clippy');
+            // enable clipboard integration
+            new Clipboard('.clippy');
+          
+            // enable delete button actions
+          
+          }
+        
+          // post the search results
+          $('#status').html(html);
+        
+          // enable delete button actions
+          // Or, hide them
+          $(".deletebutton").bind("click", function(e) {
+            vaultRemove($(this).attr('data-id'), $(this).attr('data-rev'), function(err, data) {
+              showMainPage();
+            })
+          });
+                  
+        });
+      
       });
-      
     });
 
   
@@ -50,6 +79,8 @@ var showLoginPanel = function() {
   $('#cloudpanel').addClass("hidden");
   $('#status').addClass("hidden");
   $('#topnav').addClass("hidden");
+  $('#loginbutton').attr("disabled", false);
+  
   
   // clear the form
   $('#loginpassword').val("");
@@ -155,6 +186,8 @@ $( document ).ready(function() {
   $('#loginform').bind("submit", function(event) {
     event.preventDefault();
     
+    $('#loginbutton').attr("disabled", true);
+    
     var password = $('#loginpassword').val();
     
     vaultSize(function(err, vaultsize) {
@@ -186,8 +219,12 @@ $( document ).ready(function() {
         
         
       }
+      $('#loginbutton').attr("disabled", false);
+      
     })
   });
+  
+
   
 });
 
