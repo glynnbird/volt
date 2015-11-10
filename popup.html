@@ -64,21 +64,22 @@
     </div>
     
     <div id="cloudpanel" class="hidden">
-      <h3>Save to Cloudant</h3>
-      <form id="cloudform">
-        <div>
-          <div>Enter the URL of the Cloudant database you wish to save your data to e.g.:</div>
-          
-          <div class="alert alert-warning">
-            https://mykey:mypassword@myaccount.cloudant.com/mydb
+      <div class="container">  
+        <h3>Save to Cloudant</h3>
+        <form id="cloudform">
+          <div>
+            <div>Enter the URL of the Cloudant database you wish to save your data to e.g. https://mykey:mypassword@myaccount.cloudant.com/mydb</div>
+            <br />
           </div>
-        </div>
-        <div class="form-group">
-          <label for="cloudurl">Cloudant URL</label>
-          <input type="url" class="form-control" id="cloudurl" placeholder="Cloudant URL">
-        </div>
-        <button type="submit" class="btn btn-default">Save</button>
-      </form>
+          <div class="form-group">
+            <label for="cloudurl">Cloudant URL</label>
+            <input type="url" class="form-control" id="cloudurl" placeholder="Cloudant URL">
+          </div>
+          <div id="cloudstatus"></div>
+          <button type="submit" class="btn btn-default">Save</button>
+        </form>
+      </div>
+    
     </div>
     
     <div id="loginpanel" class="hidden">

@@ -10,5 +10,14 @@ var matchRowTemplate = _.template('<tr>\n' +
                                   
 var emptyVaultTemplate = _.template('<div class="container"><div class="alert alert-info emptyvault">Your password vault is empty. <br /><br />Save your credentials by clicking the <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> icon on the top bar.</div></div>');
                                   
-var noMatchesTemplate = _.template('<div class="container"><div class="alert alert-info emptyvault">There are no matches for <b><%= domain %></b>.<br /><br /> Save your credentials by clicking the <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> icon on the top bar.</div></div>')                                  
+var noMatchesTemplate = _.template('<div class="container"><div class="alert alert-info emptyvault">There are no matches for <b><%= domain %></b>.<br /><br /> Save your credentials by clicking the <span class="glyphicon glyphicon-plus" aria-hidden="true"></span> icon on the top bar.</div></div>');
+
+
+var replicationStartedTemplate = _.template('<div class="alert alert-info repstatus">Starting replication</div>');                                  
+
+var replicationChangeTemplate = _.template('<div class="alert alert-info repstatus">Change: <br /> <br /><%= info %></div>');                                  
+
+var replicationCompleteTemplate = _.template('<div class="alert alert-success repstatus">Complete!</div>');                                  
                                   
+var replicationErrorTemplate = _.template('<div class="alert alert-danger repstatus">Error: <br /> <br /><%= info %></div>');                                  
+                                

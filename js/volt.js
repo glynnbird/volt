@@ -174,12 +174,24 @@ $( document ).ready(function() {
   // when the cloud form submit button is pressed
   $('#cloudform').bind("submit", function(event) {
     event.preventDefault();
+    $('#cloudbutton').attr("disabled", true);
+    
+    $('#cloudstatus').html(replicationStartedTemplate( ));
     
     var url = $('#cloudurl').val();
-    vaultdb.replicate.to(url)
-     .on("change", function(info) { console.log("change",info)})
-     .on("complete", function(info){ console.log("complete",info)})
-     .on("error", function(err) { console.log("error",err)});
+    vaultdb.sync(url)
+     .on("change", function(info) { 
+       console.log("CHANGE",info);
+       $('#cloudstatus').html(replicationChangeTemplate( { info: info.change.last_seq} )); 
+     })
+     .on("complete", function(info){ 
+       $('#cloudstatus').html(replicationCompleteTemplate( { info: JSON.stringify(info)} )); 
+       $('#cloudbutton').attr("disabled", false);    
+     })
+     .on("error", function(err) { 
+       $('#cloudstatus').html(replicationErrorTemplate( { info: JSON.stringify(err)} )); 
+       $('#cloudbutton').attr("disabled", false);    
+     });
   });
   
   // when the login form submit button is pressed
