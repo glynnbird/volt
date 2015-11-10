@@ -28,13 +28,13 @@ Volt isn't packaged for installation yet from the Chrome Store yet, but you can 
 
 When you first click the Volt button, it prompts for a master password. This should be a strong password that you can remember. It will form the basis of the value that is used to encrypt your database.
 
-![login screenshot](https://github.com/glynnbird/volt/raw/master/img/volt-login.png "Volt browser screenshot")
+![login screenshot](https://github.com/glynnbird/volt/raw/master/img/volt-login.png "Volt login screenshot")
 
 Volt takes your password, puts it through the [PBKDF2](https://en.wikipedia.org/wiki/PBKDF2) algorithm to calculate the key it will use to encrypt and decrypt your data. A new vault database is created locally using PouchDB. 
 
 Once logged in you should see an empty vault:
 
-![empty screenshot](https://github.com/glynnbird/volt/raw/master/img/volt-empty.png "Volt empty screenshot").
+![empty screenshot](https://github.com/glynnbird/volt/raw/master/img/volt-empty.png "Volt empty screenshot")
 
 There is a toolbar acrosss the top:
 
@@ -47,7 +47,7 @@ There is a toolbar acrosss the top:
 
 Click the plus icon:
 
-![add screenshot](https://github.com/glynnbird/volt/raw/master/img/volt-add.png "Volt add screenshot").
+![add screenshot](https://github.com/glynnbird/volt/raw/master/img/volt-add.png "Volt add screenshot")
 
 The URL is pre-filled with the URL of the current Chrome tab you are viewing. Add a username, password and optionally a note and press the "Add" button to save it. The username and password valus are encrypted before saving. You are allowed multiple entries per website.
 
@@ -55,7 +55,7 @@ The URL is pre-filled with the URL of the current Chrome tab you are viewing. Ad
 
 Once you have some data in your Volt database, select the website you need to retrieve credentials for and click the Volt button to see a list of matching items:
 
-![matches screenshot](https://github.com/glynnbird/volt/raw/master/img/volt-matches.png "Volt matches screenshot").
+![matches screenshot](https://github.com/glynnbird/volt/raw/master/img/volt-matches.png "Volt matches screenshot")
 
 Each entry is presented in a table with "Copy" buttons allowing the username and password to be transferred into your system clipboard. Entries can be deleted by clicking the corresponding "X" icon. 
 
@@ -63,7 +63,7 @@ Each entry is presented in a table with "Copy" buttons allowing the username and
 
 You can also search for credentials using PouchDB's [free-text search](https://github.com/nolanlawson/pouchdb-quick-search) library. Simply click the magnify icon to popup the search box:
 
-![search screenshot](https://github.com/glynnbird/volt/raw/master/img/volt-search.png "Volt search screenshot").
+![search screenshot](https://github.com/glynnbird/volt/raw/master/img/volt-search.png "Volt search screenshot")
 
 Enter the phrase you want to search for and any matching items will be shown in a list.
 
@@ -71,7 +71,7 @@ Enter the phrase you want to search for and any matching items will be shown in 
 
 If you want to backup your database you can optionally sync to an Apache CouchDB or IBM Cloudant database so that you have another copy of your precious password collection. Click the cloud icon to open the sync popup:
 
-![sync screenshot](https://github.com/glynnbird/volt/raw/master/img/volt-sync.png "Volt sync screenshot").
+![sync screenshot](https://github.com/glynnbird/volt/raw/master/img/volt-sync.png "Volt sync screenshot")
 
 Enter the URL of a Cloudant or CouchDB database, including any credentials and the database name e.g.
 
@@ -79,7 +79,7 @@ Enter the URL of a Cloudant or CouchDB database, including any credentials and t
 
 Clicking 'Sync' instructs PouchDB to synchronise its data with the URL you supplied: your password database will be backed up and any new changes on the remote database will arrive in your local database.
 
-![sync screenshot](https://github.com/glynnbird/volt/raw/master/img/volt-sync1.png "Volt sync screenshot").
+![sync screenshot](https://github.com/glynnbird/volt/raw/master/img/volt-sync1.png "Volt sync screenshot")
 
 ## Logging out of Volt
 
@@ -108,6 +108,9 @@ The `username` and `password` fields are encryped using AES using the PBKDF2 has
 * there is only one copy of your data (unless you sync to Cloudant)
 * use at your own risk
 
+## Todo
 
+* better icon
+* 
 
 
