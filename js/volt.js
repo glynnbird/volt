@@ -1,86 +1,94 @@
 
-// render the main page
-var showMainPage = function() {
-  $('#addformpanel').addClass("hidden");
+var renderDocumentList = function(data, searchtxt) {
   $('#loginpanel').addClass("hidden");
   $('#cloudpanel').addClass("hidden");
   $('#status').removeClass("hidden");
   $('#topnav').removeClass("hidden");
-
-  
+ 
+  // show total vault size
   vaultSize(function(err, size) {
     
     // display vault size
     $('#vaultsizebadge').html(size);
-
-  
-    // calculate the current tab in view
-    getCurrentTabUrl(function(err, url) {
-      if(err || !url) return;
     
-      // extract the domain name from the url
-      var domain = extractDomainName(url);
+    if (!data || data.length == 0) {
   
-      loadSession(function(err, session) {
-      
-        // find all vault entries that match this domain name
-        vaultFilter(domain, session.hash,  function(err, data) {
-        
-          if (err || !data || data.length == 0) {
-          
-            if (size == 0) {
-              var html = emptyVaultTemplate({ domain: domain});
-            } else {
-              var html = noMatchesTemplate({ domain: domain});
-            }          
-          
-          } else {
-        
-      
-            // render as a table of passwords
-            var html = '<table class="table">';
-            html += '<tr><th>Site</th><th>Username</th><th>Password</th></tr>\n';
-            for(var i in data) {
-              html += matchRowTemplate(data[i]);
-            }
-            html += "</table>";
+      if (size == 0) {
+        var html = emptyVaultTemplate({ domain: searchtxt});
+      } else {
+        var html = noMatchesTemplate({ domain: searchtxt});
+      }          
+  
+    } else {
 
-      
-            // enable clipboard integration
-            new Clipboard('.clippy');
-          
-            // enable delete button actions
-          
-          }
-        
-          // post the search results
-          $('#status').html(html);
-        
-          // enable delete button actions
-          // Or, hide them
-          $(".deletebutton").bind("click", function(e) {
-            vaultRemove($(this).attr('data-id'), $(this).attr('data-rev'), function(err, data) {
-              showMainPage();
-            })
-          });
-                  
-        });
-      
-      });
+  
+      // render as a table of passwords
+      var html = '<table class="table">';
+      html += '<tr><th>Site</th><th>Username</th><th></th><th></th><th>Password</th></tr>\n';
+      for(var i in data) {
+        if (data[i].username.length > 12) {
+          data[i].displayUsername = data[i].username.substring(0,15) + "...";
+        } else {
+          data[i].displayUsername = data[i].username;
+        }
+        html += matchRowTemplate(data[i]);
+      }
+      html += "</table>";
+
+
+      // enable clipboard integration
+      new Clipboard('.clippy');
+  
+      // enable delete button actions
+  
+    }
+
+    // post the search results
+    $('#status').html(html);
+
+    // enable delete button actions
+    // Or, hide them
+    $(".deletebutton").bind("click", function(e) {
+      vaultRemove($(this).attr('data-id'), $(this).attr('data-rev'), function(err, data) {
+        showMainPage();
+      })
     });
-
   
+
+    
+
+
   });
+}
+
+// render the main page - documents filtered by current tab's domain name
+var showMainPage = function() {
+
+  // calculate the current tab in view
+  getCurrentTabUrl(function(err, url) {
+    if(err || !url) return;
+  
+    // extract the domain name from the url
+    var domain = extractDomainName(url);
+
+    loadSession(function(err, session) {
+    
+      // find all vault entries that match this domain name
+      vaultFilter(domain, session.hash,  function(err, data) {
+      
+        renderDocumentList(data, domain);
+                
+      });
+    
+    });
+  });
+
 };
 
 var showLoginPanel = function() {
-  $('#addformpanel').addClass("hidden");
-  $('#loginpanel').removeClass("hidden");
-  $('#cloudpanel').addClass("hidden");
-  $('#status').addClass("hidden");
-  $('#topnav').addClass("hidden");
-  $('#loginbutton').attr("disabled", false);
   
+  $('#loginmodal').modal({})
+  $('#loginmodalbutton').attr("disabled", false);
   
   // clear the form
   $('#loginpassword').val("");
@@ -110,32 +118,51 @@ $( document ).ready(function() {
   $("#addbutton").bind("click", function() {
     
     // remove the main page and show the add form
-    $('#addformpanel').removeClass("hidden");
-    $('#loginpanel').addClass("hidden");
-    $('#cloudpanel').addClass("hidden");
-    $('#status').addClass("hidden");
-    $('#topnav').addClass("hidden");
+    $('#addmodal').modal({})
     
     // pre-populate the form
     $('#url').val("");
     $('#username').val("");
     $('#password').val("");
+    $('#notes').val("");
     getCurrentTabUrl(function(err, url) {
       $('#url').val(url);
     });
+  });
+  
+  // when the close button of the search modal is clicked
+  $("#addmodalbutton").bind("click", function() {
+    $('#addform').submit();
+  });
+  
+  // when the search button is pressed
+  $("#searchbutton").bind("click", function() {
+    $('#searchmodal').modal({})
+  });
+  
+  // when the close button of the search modal is clicked
+  $("#searchmodalbutton").bind("click", function() {
+    $('#searchform').submit();
   });
   
   // when the cloud button is pressed
   $("#cloudbutton").bind("click", function() {
     
     // remove the main page and show the add form
-    $('#cloudpanel').removeClass("hidden");
-    $('#loginpanel').addClass("hidden");
-    $('#addformpanel').addClass("hidden");
-    $('#status').addClass("hidden");
+    $('#cloudmodal').modal({})
     
     // clear the form
     $('#cloudurl').val("");
+  });
+  
+  // when the close button of the search modal is clicked
+  $("#cloudmodalbutton").bind("click", function() {
+    $('#cloudform').submit();
+  });
+  
+  // when the login button of the login modal is clicked
+  $("#loginmodalbutton").bind("click", function() {
+    $('#loginform').submit();
   });
   
   // when the logout button is pressed
@@ -157,6 +184,7 @@ $( document ).ready(function() {
       domain: "",
       username: $('#username').val(),
       password: $('#password').val(),
+      notes: $('#notes').val()
     }
     doc.domain = extractDomainName(doc.url);
     
@@ -164,6 +192,8 @@ $( document ).ready(function() {
     loadSession(function(err, session) {
       vaultWrite(doc, session.hash, function(err,data) {
       
+        $('#addmodal').modal('hide');
+        
         // re-render the main page
         showMainPage();
       });
@@ -186,7 +216,11 @@ $( document ).ready(function() {
      })
      .on("complete", function(info){ 
        $('#cloudstatus').html(replicationCompleteTemplate( { info: JSON.stringify(info)} )); 
-       $('#cloudbutton').attr("disabled", false);    
+       $('#cloudbutton').attr("disabled", false);  
+       setTimeout(function() {
+         $('#cloudmodal').modal('hide')  
+       },500);
+        
      })
      .on("error", function(err) { 
        $('#cloudstatus').html(replicationErrorTemplate( { info: JSON.stringify(err)} )); 
@@ -198,7 +232,7 @@ $( document ).ready(function() {
   $('#loginform').bind("submit", function(event) {
     event.preventDefault();
     
-    $('#loginbutton').attr("disabled", true);
+    $('#loginmodalbutton').attr("disabled", true);
     
     var password = $('#loginpassword').val();
     
@@ -213,11 +247,13 @@ $( document ).ready(function() {
         vaultRead("verify", hash, function(err, data) {
           if (!err && data && data.password && data.password == "volt") {
             saveSession({ hash: hash}, function(err, data) {
+              $('#loginmodal').modal('hide');
               showMainPage();
             });
           } else {
             $('#loginalert').addClass("alert-danger");
             $('#loginalert').html("Incorrect password");
+            $('#loginmodalbutton').attr("disabled", false);
           }
         })
       } else {
@@ -225,6 +261,7 @@ $( document ).ready(function() {
         var hash = hashPassword(password);
         vaultWrite({_id: "verify", domain:"test.com", url:"http://test.com", password:"volt"}, hash, function(err, data) {
           saveSession({ hash: hash}, function(err, data) {
+            $('#loginmodal').modal('hide');
             showMainPage();
           });
         });
@@ -236,7 +273,20 @@ $( document ).ready(function() {
     })
   });
   
+  // when the search form submit button is pressed
+  $('#searchform').bind("submit", function(event) {
+    event.preventDefault();
+    $('#searchmodal').modal('hide')
+    var searchterm = $('#searchterm').val();
+    loadSession(function(err, session) {
+    
+      vaultSearch(searchterm, session.hash,function(err, data) {
+        console.log("SUBMIT!",err, data);
+        renderDocumentList(data, searchterm);
+      });
+    });
 
+  });
   
 });
 

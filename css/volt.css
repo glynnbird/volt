@@ -2,7 +2,7 @@ body {
   font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
   font-size: 100%;
   margin-top: 52px;
-  height:300px;
+  height:400px;
   width:400px;
 }
 #status {
@@ -11,7 +11,7 @@ body {
   text-overflow: ellipsis;
   overflow: hidden;
   max-width: 400px;
-  height:300px;
+  height:350px;
   width:400px;
 }
 .clippy {

@@ -32,6 +32,21 @@ var vaultRead = function(id, encryptionKey, callback) {
   });
 };
 
+
+var preprocessSearchResults = function(data, encryptionKey) {
+  var retval = [];
+  if (data && data.rows && data.rows.length > 0) {
+    for(var i in data.rows) {
+      data.rows[i].doc.username = decrypt(data.rows[i].doc.username, encryptionKey);
+      data.rows[i].doc.password = decrypt(data.rows[i].doc.password, encryptionKey);
+      if (!data.rows[i].doc.notes) {
+        data.rows[i].doc.notes="";
+      }
+      retval.push(data.rows[i].doc)
+    }
+  } 
+  return retval
+}
 var vaultFilter = function(domain, encryptionKey, callback) {
   var fun = function(doc) {
     if (!doc.deleted) {
@@ -39,14 +54,7 @@ var vaultFilter = function(domain, encryptionKey, callback) {
     }
   };
   vaultdb.query(fun, { key:domain, include_docs: true }, function(err, data) {
-    var retval = [];
-    if (!err && data && data.rows) {
-      for(var i in data.rows) {
-        data.rows[i].doc.username = decrypt(data.rows[i].doc.username, encryptionKey);
-        data.rows[i].doc.password = decrypt(data.rows[i].doc.password, encryptionKey);
-        retval.push(data.rows[i].doc)
-      }
-    } 
+    var retval = preprocessSearchResults(data, encryptionKey);
     callback(err, retval);
   });
 };
@@ -76,6 +84,23 @@ var vaultRemove = function(id, rev, callback) {
     vaultdb.put(doc,callback);
   });
 };
+
+var vaultSearch = function(searchterm, encryptionKey, callback) {
+  vaultdb.search({
+    query: searchterm,
+    fields: ['domain', 'notes'],
+    include_docs: true,
+    filter: function (doc) {
+      return doc.deleted !== true;
+    }
+  }, function(err, data) {
+    console.log("search", err, data);
+    var retval = preprocessSearchResults(data, encryptionKey);
+    callback(err, retval);
+    
+  });
+};
+
 /*
 vaultdb.destroy(function(err, data) {
   vaultWrite({ username: "glynn.bird@gmail.com", password: "poolshifter", url: "http://twitter.com", domain: "twitter.com"},

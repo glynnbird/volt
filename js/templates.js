@@ -1,9 +1,9 @@
 var matchRowTemplate = _.template('<tr>\n' + 
-                                  '  <td><%= domain %></td>\n'+
-                                  '  <td><%= username %> <button class="clippy btn btn-primary btn-xs" data-clipboard-text="<%= username %>">Copy</button>\n'+
-                                  '  </td>\n'+
-                                  '  <td><button class="clippy btn btn-warning btn-xs" data-clipboard-text="<%= password %>">Copy</button>\n'+
-                                  '  </td>\n'+    
+                                  '  <td><a href="<%= url %>" target="_new" title="<%= notes %>"><%= domain %></a></td>\n'+
+                                  '  <td><%= displayUsername %></td>\n'+
+                                  '  <td><button class="clippy btn btn-primary btn-xs" data-clipboard-text="<%= username %>">Copy</button></td> \n'+
+                                  '  <td>&nbsp;</td>\n' + 
+                                  '  <td><button class="clippy btn btn-warning btn-xs" data-clipboard-text="<%= password %>">Copy</button></td>\n'+
                                   '  <td><button class="deletebutton btn btn-danger btn-xs" data-id="<%= _id %>" data-rev="<%= _rev %>">X</button>\n'+
                                   '  </td>\n'+                               
                                   '</tr>');
