@@ -1,9 +1,5 @@
 
 var renderDocumentList = function(data, searchtxt) {
-  $('#loginpanel').addClass("hidden");
-  $('#cloudpanel').addClass("hidden");
-  $('#status').removeClass("hidden");
-  $('#topnav').removeClass("hidden");
  
   // show total vault size
   vaultSize(function(err, size) {
@@ -24,7 +20,7 @@ var renderDocumentList = function(data, searchtxt) {
   
       // render as a table of passwords
       var html = '<table class="table">';
-      html += '<tr><th>Site</th><th>Username</th><th></th><th></th><th>Password</th></tr>\n';
+      html += matchRowHeader({});
       for(var i in data) {
         if (data[i].username.length > 12) {
           data[i].displayUsername = data[i].username.substring(0,15) + "...";

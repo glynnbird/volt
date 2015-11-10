@@ -1,3 +1,5 @@
+var matchRowHeader = _.template('<tr><th>Site</th><th>Username</th><th></th><th></th><th>Password</th></tr>\n');
+
 var matchRowTemplate = _.template('<tr>\n' + 
                                   '  <td><a href="<%= url %>" target="_new" title="<%= notes %>"><%= domain %></a></td>\n'+
                                   '  <td><%= displayUsername %></td>\n'+
